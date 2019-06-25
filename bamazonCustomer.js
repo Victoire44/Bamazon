@@ -1,6 +1,7 @@
 var mysql = require("mysql");
-var inquirer = require('inquirer');
-var Table = require('cli-table');
+var inquirer = require("inquirer");
+var Table = require("cli-table");
+var colors = require("colors");
 
 
 var connection = mysql.createConnection({
@@ -27,6 +28,7 @@ function review() {
                 [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]);
         }
         console.log(table.toString());
+        console.log("\n========================================\n")
         manageProducts();
     });
 }
@@ -37,22 +39,38 @@ function manageProducts() {
         {
             type: "input",
             name: "id",
-            message: "What is the ID of the item you would like to purchase?"
+            message: "What is the ID of the item you would like to purchase?",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
         },
         {
             type: "input",
             name: "quantity",
-            message: "How many would you like?"
+            message: "How many would you like?",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
         }
     ]).then(function (answer) {
         connection.query("SELECT * FROM products WHERE item_id=?", answer.id, function (err, res) {
             if (err) throw err;
-            console.log(res);
-            console.log(res.quantity)
-            if (answer.quantity < res[0].stock_quantity) {
-                console.log("Successfully purchased, you buy" + answer.quantity + res[0].product_name)
+            if (answer.quantity <= res[0].stock_quantity) {
+                console.log("\n========================================\n")
+                console.log(("Successfully purchased " + answer.quantity + " " + res[0].product_name + "'s").yellow)
+                console.log("\n========================================\n")
+                review()
             } else {
-                console.log("Insufficient quantity!")
+                console.log("\n========================================\n")
+                console.log("Insufficient quantity!".yellow)
+                console.log("\n========================================\n")
+                review()
             }
         });
     });
