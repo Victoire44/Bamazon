@@ -21,4 +21,12 @@ VALUES ("Uncharted 4","Video Games", 49.95, 150),
 ("Bill and Ted's Axcellent Adventure", "Films", 15, 25),
 ("Mad Max: Fury Road", "Films", 25.5, 57),
 ("Monopoly", "Board Games", 30.5, 35),
-("Yahtzee", "Board Games", 19.95, 150)
+("Yahtzee", "Board Games", 19.95, 150);
+
+
+-- CREATE TABLE departments(
+--     department_id INTEGER(11) AUTO_INCREMENT NOT NULL,
+--     department_name VARCHAR(50) NOT NULL,
+--     over_head_costs INTEGER(11) NOT NULL,
+--     PRIMARY KEY (item_id)
+-- );

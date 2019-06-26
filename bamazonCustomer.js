@@ -59,12 +59,24 @@ function manageProducts() {
             }
         }
     ]).then(function (answer) {
-        connection.query("SELECT * FROM products WHERE item_id=?", answer.id, function (err, res) {
+        connection.query("SELECT stock_quantity FROM products WHERE ?", [{
+            item_id: answer.id
+        }], function (err, res) {
             if (err) throw err;
-            if (answer.quantity <= res[0].stock_quantity) {
+            if (res[0].stock_quantity > answer.quantity) {
                 console.log("\n========================================\n")
                 console.log(("Successfully purchased " + answer.quantity + " " + res[0].product_name + "'s").yellow)
                 console.log("\n========================================\n")
+
+                connection.query("UPDATE products SET ? WHERE ?",
+                    [
+                        {
+                            stock_quantity: res[0].stock_quantity - answer.quantity
+                        },
+                        {
+                            item_id: answer.id
+                        }
+                    ])
                 review()
             } else {
                 console.log("\n========================================\n")
@@ -75,4 +87,3 @@ function manageProducts() {
         });
     });
 };
-
