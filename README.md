@@ -4,7 +4,7 @@ Bamazon is an app that takes in orders from customers and deplete  stock from th
 
 
 ## Chalenge 1: Customer View
-![bamazon](assets/bamazon.gif)
+![bamazon](assets/bamazonC.gif)
 
 The table lists:
 * an id for each product

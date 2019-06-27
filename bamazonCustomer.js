@@ -28,7 +28,7 @@ function review() {
                 [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]);
         }
         console.log(table.toString());
-        console.log("\n========================================\n")
+        console.log("\n==================================================\n")
         manageProducts();
     });
 }
@@ -59,15 +59,16 @@ function manageProducts() {
             }
         }
     ]).then(function (answer) {
-        connection.query("SELECT stock_quantity FROM products WHERE ?", [{
+        connection.query("SELECT stock_quantity, product_name FROM products WHERE ?", [{
             item_id: answer.id
         }], function (err, res) {
-            if (err) throw err;
-            if (res[0].stock_quantity > answer.quantity) {
-                console.log("\n========================================\n")
-                console.log(("Successfully purchased " + answer.quantity + " " + res[0].product_name + "'s").yellow)
-                console.log("\n========================================\n")
-
+            if (err) throw err
+            if (res.length === 0) {
+                console.log("\n===================================================\n")
+                console.log(("Sorry, this ID doesn't exist.").yellow)
+                console.log("\n===================================================\n")
+                manageProducts()
+            } else if (res[0].stock_quantity > answer.quantity) {
                 connection.query("UPDATE products SET ? WHERE ?",
                     [
                         {
@@ -77,11 +78,14 @@ function manageProducts() {
                             item_id: answer.id
                         }
                     ])
+                console.log("\n==================================================\n")
+                console.log(("Successfully purchased " + answer.quantity + " " + res[0].product_name + "'s").yellow)
+                console.log("\n==================================================\n")
                 review()
             } else {
-                console.log("\n========================================\n")
+                console.log("\n===================================================\n")
                 console.log("Insufficient quantity!".yellow)
-                console.log("\n========================================\n")
+                console.log("\n===================================================\n")
                 review()
             }
         });
