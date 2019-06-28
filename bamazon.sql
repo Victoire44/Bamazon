@@ -15,11 +15,11 @@ INSERT INTO products(product_name, department_name, price,stock_quantity)
 VALUES ("Uncharted 4","Video Games", 49.95, 150),
 ("DOOM", "Video Games", 59.99, 150),
 ("Crate of Spam", "Food and Drink", 24.5, 50),
-("Cool Shades", "Apparel", 75, 5),
+("Cool Shades", "Apparel", 75, 4),
 ("Worn Denim jeans", "Apparel", 54.25, 35),
 ("Survival Towel", "Necessities", 42.42, 42),
 ("Bill and Ted's Axcellent Adventure", "Films", 15, 25),
-("Mad Max: Fury Road", "Films", 25.5, 57),
+("Mad Max: Fury Road", "Films", 25.5, 3),
 ("Monopoly", "Board Games", 30.5, 35),
 ("Yahtzee", "Board Games", 19.95, 150);
 

@@ -40,6 +40,9 @@ function option() {
             case "Add New product":
                 addProduct();
                 break;
+            case "Quit":
+                connection.end();
+                break;
             default:
                 connection.end();
                 break;
@@ -60,6 +63,7 @@ var inventory = function () {
             table.push([res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]);
         };
         console.log("\n" + table.toString() + "\n");
+        console.log("\n============================\n");
         option();
     });
 }
@@ -79,6 +83,7 @@ var lowInventory = function () {
         console.log(table.toString());
         console.log("\n============================\n");
         option();
+
     });
 };
 
@@ -87,7 +92,13 @@ var addInventory = function () {
         {
             name: "id",
             type: "input",
-            message: "Enter the ID of the item that you would like to update"
+            message: "Enter the ID of the item that you would like to update",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
         },
         {
             name: "stock",
@@ -105,21 +116,27 @@ var addInventory = function () {
             item_id: answer.id
         }],
             function (err, res) {
-                connection.query("UPDATE products SET ? WHERE ?", [{
-                    stock_quantity: parseInt(res[0].stock_quantity) + parseInt(answer.stock)
-                },
-                {
-                    item_id: answer.id
-                }],
-                    function (err) {
-                        if (err) throw err;
-                    }
-                );
-                console.log("\n===============================\n")
-                console.log("Your inventory has been updated".yellow)
-                console.log("\n===============================\n")
-                inventory()
-                
+                if (err) throw err;
+                if (res.length === 0) {
+                    console.log("\n===================================================\n")
+                    console.log(("Sorry, this ID doesn't exist.").yellow)
+                    console.log("\n===================================================\n")
+                    addInventory();
+                } else {
+                    connection.query("UPDATE products SET ? WHERE ?",
+                        [
+                            {
+                                stock_quantity: parseInt(res[0].stock_quantity) + parseInt(answer.stock)
+                            },
+                            {
+                                item_id: answer.id
+                            }
+                        ])
+                    console.log("\n===============================\n")
+                    console.log("Your inventory has been updated".yellow)
+                    console.log("\n===============================\n")
+                    inventory()
+                }
             }
         )
     })
@@ -166,7 +183,7 @@ var addProduct = function () {
             department_name: answer.department,
             price: answer.cost,
             stock_quantity: answer.quantity
-        })
+        });
         console.log("\n========================================\n")
         console.log((answer.addProduct + " added to Bamazon").yellow)
         console.log("\n========================================\n")
